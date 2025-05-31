@@ -1,0 +1,83 @@
+{
+  "name": "dashboard-filter-set",
+  "version": "0.0.1",
+  "description": "Bootstrapped Looker Extension with React and Javascript",
+  "main": "dist/bundle.js",
+  "scripts": {
+    "analyze": "export ANALYZE_MODE=static && yarn build",
+    "build": "export BABEL_ENV=build && webpack --config webpack.prod.js",
+    "clean": "rm -rf dist",
+    "develop": "webpack serve --hot --port 8080 --config webpack.develop.js",
+    "prebuild": "yarn clean"
+  },
+  "author": "yournamehere",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=14"
+  },
+  "dependencies": {
+    "@looker/components": "^5.0.3",
+    "@looker/embed-sdk": "^1.8.0",
+    "@looker/extension-sdk": "^25.4.0",
+    "@looker/extension-sdk-react": "^25.4.0",
+    "@looker/sdk": "^25.4.0",
+    "@looker/sdk-rtl": "^21.6.0",
+    "@styled-icons/material": "10.34.0",
+    "@styled-icons/material-outlined": "10.34.0",
+    "@styled-icons/material-rounded": "10.34.0",
+    "lodash": "^4.17.21",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "react-is": "^17.0.0",
+    "react-router-dom": "^5.3.0",
+    "styled-components": "^5.3.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.23.4",
+    "@babel/core": "^7.23.7",
+    "@babel/plugin-transform-class-properties": "^7.23.3",
+    "@babel/plugin-transform-private-methods": "^7.23.3",
+    "@babel/plugin-transform-private-property-in-object": "^7.23.4",
+    "@babel/plugin-transform-react-jsx": "^7.23.4",
+    "@babel/plugin-transform-runtime": "^7.23.7",
+    "babel-plugin-styled-components": "^2.1.4",
+    "@babel/preset-env": "^7.23.8",
+    "@babel/preset-react": "^7.23.3",
+    "@babel/preset-typescript": "^7.23.3",
+    "@babel/runtime": "^7.23.8",
+    "babel-loader": "^9.1.3", 
+    "dotenv": "^16.3.1",
+    "webpack": "^5.89.0",
+    "webpack-bundle-analyzer": "^4.10.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      [
+        "@babel/preset-react",
+        { "runtime": "automatic" }
+      ]
+    ],
+    "plugins": [
+      [
+        "@babel/plugin-transform-class-properties",
+        {
+          "loose": true
+        }
+      ],
+      ["@babel/plugin-transform-private-methods", { "loose": true }],
+      [
+        "@babel/plugin-transform-private-property-in-object",
+        { "loose": true }
+      ],
+      [
+        "@babel/plugin-transform-react-jsx",
+        {
+          "pragmaFrag": "React.Fragment"
+        }
+      ]
+    ]
+  }
+}
