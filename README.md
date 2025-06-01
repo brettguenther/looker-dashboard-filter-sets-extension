@@ -38,12 +38,16 @@ A Looker extension to save personal filter sets as a dashboard tile.
    Either drag and upload the `manifest.lkml` file in this directory into your Looker project, or create a `manifest.lkml` with the same content. Change the `id`, `label`, or `url` as needed.
 
    ```
-    project_name: "dashboard-filter-set"
-    application: dashboard-filter-set {
-        label: "dashboard-filter-set React/JavaScript extension"
+    application: dashboard_filter_sets {
         url: "https://localhost:8080/bundle.js"
+        label: "Dashboard Filter Sets"
         entitlements: {
-          core_api_methods: ["me"]
+            core_api_methods: ["update_artifacts","artifact","delete_artifact","artifact_value"]
+        }
+        mount_points: {
+            dashboard_vis: no
+            dashboard_tile: yes
+            standalone: no
         }
     }
    ```
@@ -74,12 +78,16 @@ To allow other people to use the extension, build the JavaScript bundle file and
 3. Modify your `manifest.lkml` to use `file` instead of `url`:
 
    ```
-    project_name: "dashboard-filter-set"
-    application: dashboard-filter-set {
-        label: "A Looker React/JavaScript extension"
-        file: "bundle.js"
-        entitlements: {
-          core_api_methods: ["me"]
+        application: dashboard_filter_sets {
+            file: "bundle.js"
+            label: "Dashboard Filter Sets"
+            entitlements: {
+                core_api_methods: ["me","artifact_usage","update_artifacts","artifact","delete_artifact","artifact_value"]
+            }
+            mount_points: {
+                dashboard_vis: no
+                dashboard_tile: yes
+                standalone: no
+            }
         }
-    }
    ```
