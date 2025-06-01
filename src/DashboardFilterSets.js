@@ -39,12 +39,16 @@ export const DashboardFilterSets = () => {
   const [userId, setUserId] = useState(null);
 
   const BASE_ARTIFACT_NAMESPACE = 'dashboardFilterSetsApp';
-  const ARTIFACT_KEY = 'userSavedFilterSets';
+  const BASE_ARTIFACT_KEY = 'userSavedFilterSets';
   const [artifactNamespace, setArtifactNamespace] = useState('');
+  const [artifactKey, setArtifactKey] = useState('');
 
   useEffect(() => {
     setCurrentFilters(dashboardFilters || {});
-  }, [dashboardFilters]);
+    if (tileHostData?.dashboardId) {
+      setArtifactKey(`${BASE_ARTIFACT_KEY}_${tileHostData.dashboardId}`);
+    }
+  }, [dashboardFilters, tileHostData?.dashboardId]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -61,9 +65,9 @@ export const DashboardFilterSets = () => {
 
   useEffect(() => {
     const loadSavedSets = async () => {
-      if (!artifactNamespace) return; // Don't load if namespace isn't set
+      if (!artifactNamespace || !artifactKey) return; // Don't load if namespace or key isn't set
       try {
-        const artifactValue = await coreSDK.ok(coreSDK.artifact_value(artifactNamespace, ARTIFACT_KEY));
+        const artifactValue = await coreSDK.ok(coreSDK.artifact_value(artifactNamespace, artifactKey));
         if (artifactValue) {
           try {
             setSavedFilterSets(Array.isArray(artifactValue) ? artifactValue : []);
@@ -80,10 +84,10 @@ export const DashboardFilterSets = () => {
       }
     };
     loadSavedSets();
-  }, [coreSDK, artifactNamespace]);
+  }, [coreSDK, artifactNamespace, artifactKey]);
 
   const handleSaveCurrentFilterSet = async () => {
-    if (!artifactNamespace) return;
+    if (!artifactNamespace || !artifactKey) return;
     const trimmedName = newFilterSetName.trim();
     if (!trimmedName) {
       return;
@@ -95,7 +99,7 @@ export const DashboardFilterSets = () => {
       filters: { ...currentFilters },
     };
 
-    const currentArtifact = await coreSDK.ok(coreSDK.artifact({namespace: artifactNamespace, key: ARTIFACT_KEY}))
+    const currentArtifact = await coreSDK.ok(coreSDK.artifact({namespace: artifactNamespace, key: artifactKey}))
 
     const updatedSets = [...savedFilterSets, newSet];
 
@@ -103,7 +107,7 @@ export const DashboardFilterSets = () => {
       await coreSDK.ok(coreSDK.update_artifacts(
         artifactNamespace,
         [{
-          key: ARTIFACT_KEY,
+          key: artifactKey,
           value: JSON.stringify(updatedSets),
           content_type: 'application/json',
           version: currentArtifact?.[0]?.version ?? 1
@@ -117,11 +121,11 @@ export const DashboardFilterSets = () => {
   };
 
   const handleDeleteFilterSet = async (setIdToDelete) => {
-    if (!artifactNamespace) return;
+    if (!artifactNamespace || !artifactKey) return;
     const updatedSets = savedFilterSets.filter(set => set.id !== setIdToDelete);
 
     try {
-      const currentArtifact = await coreSDK.ok(coreSDK.artifact({namespace: artifactNamespace, key: ARTIFACT_KEY}));
+      const currentArtifact = await coreSDK.ok(coreSDK.artifact({namespace: artifactNamespace, key: artifactKey}));
       const version = currentArtifact?.[0]?.version;
 
       if (version === undefined && updatedSets.length > 0) {
@@ -130,7 +134,7 @@ export const DashboardFilterSets = () => {
 
       await coreSDK.ok(coreSDK.update_artifacts(
         artifactNamespace,
-        [{ key: ARTIFACT_KEY, value: JSON.stringify(updatedSets), content_type: 'application/json', version: version }]
+        [{ key: artifactKey, value: JSON.stringify(updatedSets), content_type: 'application/json', version: version }]
       ));
       setSavedFilterSets(updatedSets);
     } catch (error) {
