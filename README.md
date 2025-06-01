@@ -42,7 +42,7 @@ A Looker extension to save personal filter sets as a dashboard tile.
         url: "https://localhost:8080/bundle.js"
         label: "Dashboard Filter Sets"
         entitlements: {
-            core_api_methods: ["update_artifacts","artifact","delete_artifact","artifact_value"]
+            core_api_methods: ["me","artifact_usage","update_artifacts","artifact","delete_artifact","artifact_value"]
         }
         mount_points: {
             dashboard_vis: no
